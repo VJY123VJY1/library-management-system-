@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Transaction Log & Overdue Tracking - College Library</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar" id="main-sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-logo-icon">📚</div>
+        <div class="sidebar-title">
+          <h1>CampusLib</h1>
+          <span>Central College Library</span>
+        </div>
+      </div>
+      <nav class="sidebar-nav">
+        <div class="nav-section-title">Navigation</div>
+        <a href="index.html" class="nav-link">
+          <span class="nav-icon">📊</span>
+          <span>Dashboard</span>
+        </a>
+        <a href="books.html" class="nav-link">
+          <span class="nav-icon">📖</span>
+          <span>Books</span>
+        </a>
+        <a href="members.html" class="nav-link">
+          <span class="nav-icon">👥</span>
+          <span>Members</span>
+        </a>
+        
+        <div class="nav-section-title">Circulation Desk</div>
+        <a href="issue.html" class="nav-link">
+          <span class="nav-icon">📤</span>
+          <span>Issue Book</span>
+        </a>
+        <a href="return.html" class="nav-link">
+          <span class="nav-icon">📥</span>
+          <span>Return Book</span>
+        </a>
+        <a href="transactions.html" class="nav-link active" id="nav-transactions">
+          <span class="nav-icon">📑</span>
+          <span>Transactions</span>
+        </a>
+        <a href="transactions.html?filter=overdue" class="nav-link" id="nav-overdue">
+          <span class="nav-icon">⚠️</span>
+          <span>Overdue Books</span>
+        </a>
+      </nav>
+      <div class="sidebar-footer">
+        <span>v1.0.0 • Academic Build</span>
+        <span>🟢 Active</span>
+      </div>
+    </aside>
+
+    <!-- Main Content Wrapper -->
+    <div class="main-wrapper">
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="mobile-menu-btn" id="mobile-menu-toggle" aria-label="Toggle menu">☰</button>
+          <div class="page-breadcrumb">
+            <span class="breadcrumb-title" id="page-heading">Circulation Transactions</span>
+            <span class="breadcrumb-path">Home / Transaction Audit Trail</span>
+          </div>
+        </div>
+        <div class="topbar-right">
+          <a href="issue.html" class="btn btn-primary">
+            <span>📤</span> New Book Checkout
+          </a>
+        </div>
+      </header>
+
+      <main class="content-body">
+        <!-- Filter & Search Controls -->
+        <div class="filter-bar">
+          <div class="search-input-wrapper">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="tx-search-input" placeholder="Search by book title, ISBN, patron name, or roll number...">
+          </div>
+          <div class="filter-controls">
+            <select id="tx-status-filter" class="select-control">
+              <option value="All">All Statuses</option>
+              <option value="Issued">Active (Issued)</option>
+              <option value="Returned">Completed (Returned)</option>
+              <option value="Overdue">Overdue Loans</option>
+            </select>
+            <button class="btn btn-secondary" id="refresh-tx-btn">↻ Refresh</button>
+          </div>
+        </div>
+
+        <!-- Transactions Table Panel -->
+        <div class="panel-card">
+          <div class="panel-header">
+            <h2 class="panel-title">📑 Transaction Records (<span id="tx-count">0</span>)</h2>
+            <div id="filter-indicator" style="font-size: 13px; color: var(--text-muted);"></div>
+          </div>
+          <div class="panel-body panel-body-table">
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Tx ID</th>
+                    <th>Book</th>
+                    <th>Member</th>
+                    <th>Issue Date</th>
+                    <th>Due Date</th>
+                    <th>Return Date</th>
+                    <th>Status</th>
+                    <th>Fine</th>
+                    <th style="text-align: right;">Action</th>
+                  </tr>
+                </thead>
+                <tbody id="tx-table-body">
+                  <tr>
+                    <td colspan="9" class="empty-state">
+                      <div class="empty-state-icon">⏳</div>
+                      <h3>Loading transaction records...</h3>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="js/api.js"></script>
+  <script src="js/transactions.js"></script>
+</body>
+</html>

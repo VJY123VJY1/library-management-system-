@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Member Management - College Library</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar" id="main-sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-logo-icon">📚</div>
+        <div class="sidebar-title">
+          <h1>CampusLib</h1>
+          <span>Central College Library</span>
+        </div>
+      </div>
+      <nav class="sidebar-nav">
+        <div class="nav-section-title">Navigation</div>
+        <a href="index.html" class="nav-link">
+          <span class="nav-icon">📊</span>
+          <span>Dashboard</span>
+        </a>
+        <a href="books.html" class="nav-link">
+          <span class="nav-icon">📖</span>
+          <span>Books</span>
+        </a>
+        <a href="members.html" class="nav-link active">
+          <span class="nav-icon">👥</span>
+          <span>Members</span>
+        </a>
+        
+        <div class="nav-section-title">Circulation Desk</div>
+        <a href="issue.html" class="nav-link">
+          <span class="nav-icon">📤</span>
+          <span>Issue Book</span>
+        </a>
+        <a href="return.html" class="nav-link">
+          <span class="nav-icon">📥</span>
+          <span>Return Book</span>
+        </a>
+        <a href="transactions.html" class="nav-link">
+          <span class="nav-icon">📑</span>
+          <span>Transactions</span>
+        </a>
+        <a href="transactions.html?filter=overdue" class="nav-link">
+          <span class="nav-icon">⚠️</span>
+          <span>Overdue Books</span>
+        </a>
+      </nav>
+      <div class="sidebar-footer">
+        <span>v1.0.0 • Academic Build</span>
+        <span>🟢 Active</span>
+      </div>
+    </aside>
+
+    <!-- Main Content Wrapper -->
+    <div class="main-wrapper">
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="mobile-menu-btn" id="mobile-menu-toggle" aria-label="Toggle menu">☰</button>
+          <div class="page-breadcrumb">
+            <span class="breadcrumb-title">Member Directory</span>
+            <span class="breadcrumb-path">Home / Registered Students & Faculty</span>
+          </div>
+        </div>
+        <div class="topbar-right">
+          <button class="btn btn-primary" id="open-add-member-btn">
+            <span>👤➕</span> Register Member
+          </button>
+        </div>
+      </header>
+
+      <main class="content-body">
+        <!-- Filter & Search Controls -->
+        <div class="filter-bar">
+          <div class="search-input-wrapper">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="member-search-input" placeholder="Search by name, roll number, email, or department...">
+          </div>
+          <div class="filter-controls">
+            <select id="member-dept-filter" class="select-control">
+              <option value="All">All Departments</option>
+              <option value="Computer Science">Computer Science</option>
+              <option value="Information Technology">Information Technology</option>
+              <option value="Electronics & Communication">Electronics & Communication</option>
+              <option value="Mechanical Engineering">Mechanical Engineering</option>
+              <option value="Civil Engineering">Civil Engineering</option>
+              <option value="Mathematics">Mathematics</option>
+              <option value="Physics">Physics</option>
+            </select>
+            <button class="btn btn-secondary" id="refresh-members-btn">↻ Refresh</button>
+          </div>
+        </div>
+
+        <!-- Members Table Panel -->
+        <div class="panel-card">
+          <div class="panel-header">
+            <h2 class="panel-title">👥 Registered Patrons (<span id="members-count">0</span>)</h2>
+          </div>
+          <div class="panel-body panel-body-table">
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Roll / ID Number</th>
+                    <th>Department</th>
+                    <th>Contact Info</th>
+                    <th>Registered</th>
+                    <th>Active Loans</th>
+                    <th style="text-align: right;">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="members-table-body">
+                  <tr>
+                    <td colspan="8" class="empty-state">
+                      <div class="empty-state-icon">⏳</div>
+                      <h3>Loading member records...</h3>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Add / Edit Member Modal -->
+  <div class="modal-backdrop" id="member-modal">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 class="modal-title" id="member-modal-title">Register New Member</h3>
+        <button class="modal-close-btn" id="close-member-modal">&times;</button>
+      </div>
+      <form id="member-form">
+        <div class="modal-body">
+          <input type="hidden" id="member-form-id">
+          <div class="form-grid">
+            <div class="form-group full-width">
+              <label class="form-label" for="member-name">Full Name <span class="required">*</span></label>
+              <input type="text" id="member-name" class="form-control" placeholder="e.g. Aarav Sharma" required>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="member-roll">Roll / Registration Number <span class="required">*</span></label>
+              <input type="text" id="member-roll" class="form-control" placeholder="e.g. CS2023001" required>
+              <span class="form-hint">Must be unique across the college</span>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="member-dept">Department <span class="required">*</span></label>
+              <input type="text" id="member-dept" class="form-control" placeholder="e.g. Computer Science" required>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="member-email">Email Address <span class="required">*</span></label>
+              <input type="email" id="member-email" class="form-control" placeholder="e.g. student@college.edu" required>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="member-phone">Phone Number</label>
+              <input type="tel" id="member-phone" class="form-control" placeholder="e.g. +91 98765 43210">
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" id="cancel-member-modal">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="save-member-btn">Save Member</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Member Loan History Modal -->
+  <div class="modal-backdrop" id="member-detail-modal">
+    <div class="modal-dialog" style="max-width: 750px;">
+      <div class="modal-header">
+        <h3 class="modal-title" id="member-detail-title">Member Profile & Loan History</h3>
+        <button class="modal-close-btn" id="close-member-detail-modal">&times;</button>
+      </div>
+      <div class="modal-body" id="member-detail-body">
+        <div class="empty-state">
+          <div class="empty-state-icon">⏳</div>
+          <h3>Loading member details...</h3>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" id="close-member-detail-btn">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/api.js"></script>
+  <script src="js/members.js"></script>
+</body>
+</html>

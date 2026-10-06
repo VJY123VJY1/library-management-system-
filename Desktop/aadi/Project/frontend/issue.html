@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Issue Book - College Library Management</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar" id="main-sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-logo-icon">📚</div>
+        <div class="sidebar-title">
+          <h1>CampusLib</h1>
+          <span>Central College Library</span>
+        </div>
+      </div>
+      <nav class="sidebar-nav">
+        <div class="nav-section-title">Navigation</div>
+        <a href="index.html" class="nav-link">
+          <span class="nav-icon">📊</span>
+          <span>Dashboard</span>
+        </a>
+        <a href="books.html" class="nav-link">
+          <span class="nav-icon">📖</span>
+          <span>Books</span>
+        </a>
+        <a href="members.html" class="nav-link">
+          <span class="nav-icon">👥</span>
+          <span>Members</span>
+        </a>
+        
+        <div class="nav-section-title">Circulation Desk</div>
+        <a href="issue.html" class="nav-link active">
+          <span class="nav-icon">📤</span>
+          <span>Issue Book</span>
+        </a>
+        <a href="return.html" class="nav-link">
+          <span class="nav-icon">📥</span>
+          <span>Return Book</span>
+        </a>
+        <a href="transactions.html" class="nav-link">
+          <span class="nav-icon">📑</span>
+          <span>Transactions</span>
+        </a>
+        <a href="transactions.html?filter=overdue" class="nav-link">
+          <span class="nav-icon">⚠️</span>
+          <span>Overdue Books</span>
+        </a>
+      </nav>
+      <div class="sidebar-footer">
+        <span>v1.0.0 • Academic Build</span>
+        <span>🟢 Active</span>
+      </div>
+    </aside>
+
+    <!-- Main Content Wrapper -->
+    <div class="main-wrapper">
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="mobile-menu-btn" id="mobile-menu-toggle" aria-label="Toggle menu">☰</button>
+          <div class="page-breadcrumb">
+            <span class="breadcrumb-title">Issue Book</span>
+            <span class="breadcrumb-path">Circulation Desk / Lend Book to Patron</span>
+          </div>
+        </div>
+      </header>
+
+      <main class="content-body">
+        <div style="max-width: 900px; margin: 0 auto;">
+          <!-- Success Confirmation Box (Hidden initially) -->
+          <div id="issue-success-box" style="display: none; background: #ecfdf5; border: 1px solid #a7f3d0; border-radius: var(--radius-lg); padding: 24px; margin-bottom: 24px; text-align: center;">
+            <div style="font-size: 40px; margin-bottom: 8px;">🎉</div>
+            <h3 style="color: #065f46; font-size: 20px; margin-bottom: 8px;">Book Successfully Issued!</h3>
+            <p id="issue-success-details" style="color: #047857; margin-bottom: 18px; font-size: 14px;"></p>
+            <div style="display: flex; justify-content: center; gap: 12px;">
+              <button class="btn btn-success" id="issue-another-btn">📤 Issue Another Book</button>
+              <a href="transactions.html" class="btn btn-secondary">View All Transactions →</a>
+            </div>
+          </div>
+
+          <!-- Main Issue Form Card -->
+          <div class="panel-card" id="issue-form-card">
+            <div class="panel-header">
+              <h2 class="panel-title">📤 Book Circulation Checkout Form</h2>
+            </div>
+            <div class="panel-body">
+              <form id="issue-book-form">
+                <div class="form-grid">
+                  <!-- Member Selection -->
+                  <div class="form-group full-width">
+                    <label class="form-label" for="select-member">Select Student / Member <span class="required">*</span></label>
+                    <select id="select-member" class="form-control" required>
+                      <option value="">-- Choose Member (Search by Name or Roll No) --</option>
+                    </select>
+                    <div id="member-preview-card" style="display: none; margin-top: 10px; padding: 12px 16px; background-color: var(--bg-main); border: 1px solid var(--border-color); border-radius: var(--radius-sm);">
+                      <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                          <strong id="preview-member-name" style="color: var(--text-main);"></strong>
+                          <div id="preview-member-info" style="font-size: 12px; color: var(--text-muted);"></div>
+                        </div>
+                        <span id="preview-member-badge" class="badge badge-available"></span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Book Selection -->
+                  <div class="form-group full-width">
+                    <label class="form-label" for="select-book">Select Book to Issue <span class="required">*</span></label>
+                    <select id="select-book" class="form-control" required>
+                      <option value="">-- Choose Book (Search by Title or ISBN) --</option>
+                    </select>
+                    <div id="book-preview-card" style="display: none; margin-top: 10px; padding: 12px 16px; background-color: var(--bg-main); border: 1px solid var(--border-color); border-radius: var(--radius-sm);">
+                      <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                          <strong id="preview-book-title" style="color: var(--text-main);"></strong>
+                          <div id="preview-book-info" style="font-size: 12px; color: var(--text-muted);"></div>
+                        </div>
+                        <span id="preview-book-badge" class="badge badge-available"></span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Issue Date -->
+                  <div class="form-group">
+                    <label class="form-label" for="issue-date">Issue Date <span class="required">*</span></label>
+                    <input type="date" id="issue-date" class="form-control" required>
+                    <span class="form-hint">Default is today's date</span>
+                  </div>
+
+                  <!-- Due Date -->
+                  <div class="form-group">
+                    <label class="form-label" for="due-date">Due Date <span class="required">*</span></label>
+                    <input type="date" id="due-date" class="form-control" required>
+                    <span class="form-hint">Standard loan duration is 14 days (customizable)</span>
+                  </div>
+                </div>
+
+                <div style="margin-top: 28px; display: flex; justify-content: flex-end; gap: 12px;">
+                  <a href="index.html" class="btn btn-secondary">Cancel</a>
+                  <button type="submit" class="btn btn-primary" id="submit-issue-btn" style="min-width: 160px;">
+                    Confirm & Issue Book
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="js/api.js"></script>
+  <script src="js/issue.js"></script>
+</body>
+</html>

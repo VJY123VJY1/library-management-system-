@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard - College Library Management System</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar" id="main-sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-logo-icon">📚</div>
+        <div class="sidebar-title">
+          <h1>CampusLib</h1>
+          <span>Central College Library</span>
+        </div>
+      </div>
+      <nav class="sidebar-nav">
+        <div class="nav-section-title">Navigation</div>
+        <a href="index.html" class="nav-link active">
+          <span class="nav-icon">📊</span>
+          <span>Dashboard</span>
+        </a>
+        <a href="books.html" class="nav-link">
+          <span class="nav-icon">📖</span>
+          <span>Books</span>
+        </a>
+        <a href="members.html" class="nav-link">
+          <span class="nav-icon">👥</span>
+          <span>Members</span>
+        </a>
+        
+        <div class="nav-section-title">Circulation Desk</div>
+        <a href="issue.html" class="nav-link">
+          <span class="nav-icon">📤</span>
+          <span>Issue Book</span>
+        </a>
+        <a href="return.html" class="nav-link">
+          <span class="nav-icon">📥</span>
+          <span>Return Book</span>
+        </a>
+        <a href="transactions.html" class="nav-link">
+          <span class="nav-icon">📑</span>
+          <span>Transactions</span>
+        </a>
+        <a href="transactions.html?filter=overdue" class="nav-link">
+          <span class="nav-icon">⚠️</span>
+          <span>Overdue Books</span>
+        </a>
+      </nav>
+      <div class="sidebar-footer">
+        <span>v1.0.0 • Academic Build</span>
+        <span>🟢 Active</span>
+      </div>
+    </aside>
+
+    <!-- Main Content Wrapper -->
+    <div class="main-wrapper">
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="mobile-menu-btn" id="mobile-menu-toggle" aria-label="Toggle menu">☰</button>
+          <div class="page-breadcrumb">
+            <span class="breadcrumb-title">Library Dashboard</span>
+            <span class="breadcrumb-path">Home / Analytics & Overview</span>
+          </div>
+        </div>
+        <div class="topbar-right">
+          <div class="system-badge">
+            <span class="pulse-dot"></span>
+            <span id="system-date-display">Today</span>
+          </div>
+        </div>
+      </header>
+
+      <main class="content-body">
+        <!-- Quick Action Cards -->
+        <div class="quick-actions-grid">
+          <a href="issue.html" class="quick-action-card">
+            <div class="quick-action-icon" style="background-color: var(--primary-light); color: var(--primary);">📤</div>
+            <div class="quick-action-text">
+              <h4>Issue Book</h4>
+              <p>Lend copies to students</p>
+            </div>
+          </a>
+          <a href="return.html" class="quick-action-card">
+            <div class="quick-action-icon" style="background-color: var(--success-bg); color: var(--success);">📥</div>
+            <div class="quick-action-text">
+              <h4>Return Book</h4>
+              <p>Process return & calculate fines</p>
+            </div>
+          </a>
+          <a href="books.html" class="quick-action-card">
+            <div class="quick-action-icon" style="background-color: var(--purple-bg); color: var(--purple);">➕</div>
+            <div class="quick-action-text">
+              <h4>Catalog Book</h4>
+              <p>Add new titles or stock</p>
+            </div>
+          </a>
+          <a href="members.html" class="quick-action-card">
+            <div class="quick-action-icon" style="background-color: var(--warning-bg); color: var(--warning);">👤</div>
+            <div class="quick-action-text">
+              <h4>Register Member</h4>
+              <p>Enroll student or faculty</p>
+            </div>
+          </a>
+        </div>
+
+        <!-- 6 Metrics Cards Grid -->
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-info">
+              <span class="stat-title">Total Books</span>
+              <span class="stat-value" id="stat-total-books">—</span>
+              <span class="stat-subtext" id="stat-total-copies">— total copies</span>
+            </div>
+            <div class="stat-icon-wrapper stat-icon-blue">📚</div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-info">
+              <span class="stat-title">Available Books</span>
+              <span class="stat-value" id="stat-available-books">—</span>
+              <span class="stat-subtext">On library shelves</span>
+            </div>
+            <div class="stat-icon-wrapper stat-icon-green">✅</div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-info">
+              <span class="stat-title">Issued Books</span>
+              <span class="stat-value" id="stat-issued-books">—</span>
+              <span class="stat-subtext">Currently on loan</span>
+            </div>
+            <div class="stat-icon-wrapper stat-icon-amber">📖</div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-info">
+              <span class="stat-title">Total Members</span>
+              <span class="stat-value" id="stat-total-members">—</span>
+              <span class="stat-subtext">Registered patrons</span>
+            </div>
+            <div class="stat-icon-wrapper stat-icon-indigo">👥</div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-info">
+              <span class="stat-title">Overdue Books</span>
+              <span class="stat-value" id="stat-overdue-books" style="color: var(--danger);">—</span>
+              <span class="stat-subtext">Past return deadline</span>
+            </div>
+            <div class="stat-icon-wrapper stat-icon-red">⚠️</div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-info">
+              <span class="stat-title">Total Fines</span>
+              <span class="stat-value" id="stat-total-fines" style="color: #b45309;">—</span>
+              <span class="stat-subtext">Collected & pending</span>
+            </div>
+            <div class="stat-icon-wrapper stat-icon-purple">💰</div>
+          </div>
+        </div>
+
+        <!-- Dashboard Content Grid: Recent Transactions & Category Breakdown -->
+        <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 24px;">
+          <!-- Recent Transactions -->
+          <div class="panel-card" style="margin-bottom: 0;">
+            <div class="panel-header">
+              <h2 class="panel-title">🕒 Recent Circulation Activity</h2>
+              <a href="transactions.html" class="btn btn-secondary btn-sm">View All Transactions →</a>
+            </div>
+            <div class="panel-body panel-body-table">
+              <div class="table-responsive">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>ID</th>
+                      <th>Book Title</th>
+                      <th>Member</th>
+                      <th>Issue Date</th>
+                      <th>Due Date</th>
+                      <th>Status</th>
+                      <th>Fine</th>
+                    </tr>
+                  </thead>
+                  <tbody id="recent-transactions-table-body">
+                    <tr>
+                      <td colspan="7" class="empty-state">
+                        <div class="empty-state-icon">⏳</div>
+                        <h3>Loading recent transactions...</h3>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- Category Breakdown -->
+          <div class="panel-card" style="margin-bottom: 0;">
+            <div class="panel-header">
+              <h2 class="panel-title">🏷️ Category Distribution</h2>
+            </div>
+            <div class="panel-body" id="category-distribution-list">
+              <div class="empty-state">
+                <div class="empty-state-icon">⏳</div>
+                <h3>Loading categories...</h3>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="js/api.js"></script>
+  <script src="js/dashboard.js"></script>
+</body>
+</html>

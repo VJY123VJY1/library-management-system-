@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Return Book & Fine Desk - College Library</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar" id="main-sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-logo-icon">📚</div>
+        <div class="sidebar-title">
+          <h1>CampusLib</h1>
+          <span>Central College Library</span>
+        </div>
+      </div>
+      <nav class="sidebar-nav">
+        <div class="nav-section-title">Navigation</div>
+        <a href="index.html" class="nav-link">
+          <span class="nav-icon">📊</span>
+          <span>Dashboard</span>
+        </a>
+        <a href="books.html" class="nav-link">
+          <span class="nav-icon">📖</span>
+          <span>Books</span>
+        </a>
+        <a href="members.html" class="nav-link">
+          <span class="nav-icon">👥</span>
+          <span>Members</span>
+        </a>
+        
+        <div class="nav-section-title">Circulation Desk</div>
+        <a href="issue.html" class="nav-link">
+          <span class="nav-icon">📤</span>
+          <span>Issue Book</span>
+        </a>
+        <a href="return.html" class="nav-link active">
+          <span class="nav-icon">📥</span>
+          <span>Return Book</span>
+        </a>
+        <a href="transactions.html" class="nav-link">
+          <span class="nav-icon">📑</span>
+          <span>Transactions</span>
+        </a>
+        <a href="transactions.html?filter=overdue" class="nav-link">
+          <span class="nav-icon">⚠️</span>
+          <span>Overdue Books</span>
+        </a>
+      </nav>
+      <div class="sidebar-footer">
+        <span>v1.0.0 • Academic Build</span>
+        <span>🟢 Active</span>
+      </div>
+    </aside>
+
+    <!-- Main Content Wrapper -->
+    <div class="main-wrapper">
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="mobile-menu-btn" id="mobile-menu-toggle" aria-label="Toggle menu">☰</button>
+          <div class="page-breadcrumb">
+            <span class="breadcrumb-title">Return Book & Fines Desk</span>
+            <span class="breadcrumb-path">Circulation Desk / Check-in & Fine Settlement</span>
+          </div>
+        </div>
+      </header>
+
+      <main class="content-body">
+        <!-- Return Receipt Confirmation (Hidden initially) -->
+        <div id="return-success-box" style="display: none; background: #ecfdf5; border: 1px solid #a7f3d0; border-radius: var(--radius-lg); padding: 24px; margin-bottom: 24px; text-align: center;">
+          <div style="font-size: 40px; margin-bottom: 8px;">✅</div>
+          <h3 style="color: #065f46; font-size: 20px; margin-bottom: 8px;">Book Successfully Returned!</h3>
+          <p id="return-success-details" style="color: #047857; margin-bottom: 18px; font-size: 14px;"></p>
+          <div style="display: flex; justify-content: center; gap: 12px;">
+            <button class="btn btn-success" id="return-another-btn">📥 Process Another Return</button>
+            <a href="transactions.html" class="btn btn-secondary">View All Transactions →</a>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+          <!-- Left Column: Active Borrowed Books Search & Selection -->
+          <div class="panel-card" style="margin-bottom: 0;">
+            <div class="panel-header">
+              <h2 class="panel-title">🔍 Find Active Borrowed Book</h2>
+            </div>
+            <div class="panel-body">
+              <div class="search-input-wrapper" style="margin-bottom: 16px;">
+                <span class="search-icon">🔍</span>
+                <input type="text" id="return-search-input" placeholder="Search by Tx ID, Member name, Roll no, Book title...">
+              </div>
+
+              <div id="active-loans-list" style="max-height: 480px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px;">
+                <div class="empty-state">
+                  <div class="empty-state-icon">⏳</div>
+                  <h3>Loading active loans...</h3>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Column: Return Settlement & Fine Calculation Desk -->
+          <div class="panel-card" style="margin-bottom: 0;">
+            <div class="panel-header">
+              <h2 class="panel-title">⚖️ Return & Fine Calculator</h2>
+            </div>
+            <div class="panel-body" id="return-calc-container">
+              <div class="empty-state" id="no-selection-placeholder">
+                <div class="empty-state-icon">👈</div>
+                <h3>No transaction selected</h3>
+                <p>Please select an active borrowed book from the list on the left to process return and calculate fine.</p>
+              </div>
+
+              <div id="return-details-panel" style="display: none;">
+                <div style="background-color: var(--bg-main); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 18px; margin-bottom: 18px;">
+                  <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
+                    <div>
+                      <span class="badge badge-issued" id="calc-tx-id">Tx #—</span>
+                      <h3 style="font-size: 16px; font-weight: 700; margin-top: 6px;" id="calc-book-title">—</h3>
+                      <p style="font-size: 12px; color: var(--text-muted);" id="calc-book-isbn">ISBN: —</p>
+                    </div>
+                    <span id="calc-status-badge" class="badge"></span>
+                  </div>
+
+                  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; font-size: 13px; border-top: 1px solid var(--border-color); padding-top: 12px;">
+                    <div>
+                      <span style="color: var(--text-muted);">Borrower:</span><br>
+                      <strong id="calc-member-name">—</strong> (<span id="calc-member-roll">—</span>)
+                    </div>
+                    <div>
+                      <span style="color: var(--text-muted);">Loan Dates:</span><br>
+                      Issued: <span id="calc-issue-date">—</span><br>
+                      Due: <strong id="calc-due-date">—</strong>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-group" style="margin-bottom: 18px;">
+                  <label class="form-label" for="actual-return-date">Actual Return Date <span class="required">*</span></label>
+                  <input type="date" id="actual-return-date" class="form-control" required>
+                  <span class="form-hint">Fine will be dynamically recalculated based on this return date</span>
+                </div>
+
+                <!-- Fine Calculation Breakdown Box -->
+                <div class="fine-highlight-box" id="calc-fine-box">
+                  <div>
+                    <div class="fine-highlight-title" id="calc-fine-status-text">On-Time Return</div>
+                    <div style="font-size: 12.5px; color: var(--text-muted); margin-top: 2px;" id="calc-overdue-explanation">
+                      0 days overdue (Fine Rate: ₹5 / day)
+                    </div>
+                  </div>
+                  <div class="fine-highlight-amount" id="calc-fine-amount">₹0</div>
+                </div>
+
+                <div style="margin-top: 24px;">
+                  <button class="btn btn-success" id="confirm-return-btn" style="width: 100%; padding: 12px; font-size: 15px;">
+                    ✅ Confirm Return & Complete Transaction
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="js/api.js"></script>
+  <script src="js/return.js"></script>
+</body>
+</html>
